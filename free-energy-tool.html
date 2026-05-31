@@ -1,0 +1,540 @@
+<!-- Free Energy Interactive Learning Tool -->
+<!-- Einbetten in WordPress: Custom HTML Block, diesen gesamten Code einfügen -->
+<div id="fe-tool">
+<style>
+  #fe-tool {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    max-width: 780px;
+    margin: 0 auto;
+    color: #1a1a2e;
+    background: #f8f9ff;
+    border-radius: 12px;
+    padding: 24px;
+    box-sizing: border-box;
+  }
+  #fe-tool h2 {
+    font-size: 1.4em;
+    margin: 0 0 4px 0;
+    color: #1a1a2e;
+  }
+  #fe-tool .subtitle {
+    font-size: 0.9em;
+    color: #666;
+    margin: 0 0 20px 0;
+  }
+  #fe-tool .canvas-wrap {
+    background: #fff;
+    border: 1px solid #dde;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 20px;
+  }
+  #fe-tool canvas {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  #fe-tool .legend {
+    display: flex;
+    gap: 18px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+    font-size: 0.82em;
+  }
+  #fe-tool .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  #fe-tool .legend-dot {
+    width: 28px;
+    height: 3px;
+    border-radius: 2px;
+  }
+  #fe-tool .controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 24px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 520px) {
+    #fe-tool .controls { grid-template-columns: 1fr; }
+  }
+  #fe-tool .control-group label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85em;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #333;
+  }
+  #fe-tool .control-group label span {
+    font-weight: 400;
+    color: #555;
+  }
+  #fe-tool input[type=range] {
+    width: 100%;
+    accent-color: #5b6af5;
+    cursor: pointer;
+  }
+  #fe-tool .metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 520px) {
+    #fe-tool .metrics { grid-template-columns: 1fr 1fr; }
+  }
+  #fe-tool .metric-card {
+    background: #fff;
+    border: 1px solid #dde;
+    border-radius: 8px;
+    padding: 12px 14px;
+    text-align: center;
+  }
+  #fe-tool .metric-card .metric-label {
+    font-size: 0.75em;
+    color: #888;
+    margin-bottom: 4px;
+  }
+  #fe-tool .metric-card .metric-value {
+    font-size: 1.5em;
+    font-weight: 700;
+  }
+  #fe-tool .metric-card .metric-unit {
+    font-size: 0.7em;
+    color: #999;
+  }
+  #fe-tool .section {
+    background: #fff;
+    border: 1px solid #dde;
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin-bottom: 16px;
+  }
+  #fe-tool .section h3 {
+    font-size: 1em;
+    margin: 0 0 10px 0;
+    color: #333;
+  }
+  #fe-tool .section p {
+    font-size: 0.85em;
+    color: #555;
+    margin: 0 0 12px 0;
+    line-height: 1.6;
+  }
+  #fe-tool .btn-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  #fe-tool button {
+    padding: 9px 18px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.88em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.1s, opacity 0.1s;
+  }
+  #fe-tool button:active { transform: scale(0.97); }
+  #fe-tool .btn-perceive {
+    background: #5b6af5;
+    color: #fff;
+  }
+  #fe-tool .btn-act {
+    background: #e87040;
+    color: #fff;
+  }
+  #fe-tool .btn-reset {
+    background: #eee;
+    color: #555;
+  }
+  #fe-tool .action-log {
+    margin-top: 10px;
+    font-size: 0.82em;
+    color: #666;
+    min-height: 20px;
+    font-style: italic;
+  }
+  #fe-tool .fe-bar-wrap {
+    margin-top: 10px;
+  }
+  #fe-tool .fe-bar-label {
+    font-size: 0.8em;
+    color: #666;
+    margin-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+  }
+  #fe-tool .fe-bar-track {
+    background: #eef;
+    border-radius: 4px;
+    height: 14px;
+    overflow: hidden;
+  }
+  #fe-tool .fe-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.4s ease, background 0.4s;
+  }
+  #fe-tool .formula-box {
+    background: #f0f2ff;
+    border-left: 3px solid #5b6af5;
+    padding: 8px 12px;
+    border-radius: 0 6px 6px 0;
+    font-size: 0.82em;
+    color: #444;
+    margin-top: 8px;
+    font-family: "Courier New", monospace;
+  }
+</style>
+
+<h2>Free Energy — Interaktives Lernwerkzeug</h2>
+<p class="subtitle">Szenario: Ein Agent schätzt die Temperatur. Spiel mit den Reglern, um zu sehen, wie Vorhersage, Beobachtung und Free Energy zusammenhängen.</p>
+
+<!-- Gaussian Plot -->
+<div class="canvas-wrap">
+  <canvas id="fe-canvas" width="720" height="240"></canvas>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#5b6af5"></div> Prior (Erwartung)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#27ae60"></div> Likelihood (Beobachtung)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#e84040; opacity:0.8"></div> Posterior (aktualisierte Schätzung)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#e87040; border-top:2px dashed #e87040; height:0"></div> Beobachtung</div>
+  </div>
+</div>
+
+<!-- Sliders -->
+<div class="controls">
+  <div class="control-group">
+    <label>Prior-Mittelwert (Erwartung) <span id="lbl-prior-mean">20 °C</span></label>
+    <input type="range" id="sl-prior-mean" min="0" max="40" step="0.5" value="20">
+  </div>
+  <div class="control-group">
+    <label>Prior-Unsicherheit <span id="lbl-prior-sigma">5 °C</span></label>
+    <input type="range" id="sl-prior-sigma" min="0.5" max="12" step="0.5" value="5">
+  </div>
+  <div class="control-group">
+    <label>Beobachtung (Sensor) <span id="lbl-obs">28 °C</span></label>
+    <input type="range" id="sl-obs" min="0" max="40" step="0.5" value="28">
+  </div>
+  <div class="control-group">
+    <label>Sensor-Unsicherheit <span id="lbl-sensor-sigma">3 °C</span></label>
+    <input type="range" id="sl-sensor-sigma" min="0.5" max="12" step="0.5" value="3">
+  </div>
+</div>
+
+<!-- Metrics -->
+<div class="metrics">
+  <div class="metric-card">
+    <div class="metric-label">Posterior-Schätzung</div>
+    <div class="metric-value" id="m-post-mean" style="color:#e84040">–</div>
+    <div class="metric-unit">°C</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-label">Vorhersagefehler</div>
+    <div class="metric-value" id="m-pred-error" style="color:#e87040">–</div>
+    <div class="metric-unit">°C Abweichung</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-label">Free Energy (relativ)</div>
+    <div class="metric-value" id="m-fe" style="color:#5b6af5">–</div>
+    <div class="metric-unit">nats</div>
+  </div>
+</div>
+
+<!-- Free Energy Erklärung -->
+<div class="section">
+  <h3>Was ist Free Energy?</h3>
+  <p>
+    Free Energy ist ein Maß dafür, wie <strong>überrascht</strong> das Modell von der Beobachtung ist.
+    Sie ist groß, wenn Prior und Beobachtung weit auseinanderliegen, und klein, wenn sie übereinstimmen.
+    Das Gehirn versucht ständig, diese Größe zu minimieren.
+  </p>
+  <div class="fe-bar-wrap">
+    <div class="fe-bar-label">
+      <span>Gering (kein Konflikt)</span>
+      <span>Hoch (großer Vorhersagefehler)</span>
+    </div>
+    <div class="fe-bar-track">
+      <div class="fe-bar-fill" id="fe-bar" style="width:50%; background:#5b6af5"></div>
+    </div>
+  </div>
+  <div class="formula-box" id="fe-formula">
+    F ≈ (μ_prior − Beobachtung)² / (σ_prior² + σ_sensor²)  +  log(σ_prior² + σ_sensor²)
+  </div>
+</div>
+
+<!-- Wahrnehmung vs Aktion -->
+<div class="section">
+  <h3>Wahrnehmung vs. Aktion — zwei Wege zur Free-Energy-Minimierung</h3>
+  <p>
+    Das Gehirn kann Free Energy auf zwei Arten reduzieren:<br>
+    <strong>Wahrnehmen</strong>: Die eigene Überzeugung (Prior) wird angepasst — man akzeptiert, dass es wärmer ist als erwartet.<br>
+    <strong>Handeln</strong>: Man verändert die Welt, sodass die Beobachtung näher an die Erwartung rückt (z.B. Fenster öffnen).
+  </p>
+  <div class="btn-row">
+    <button class="btn-perceive" id="btn-perceive">Wahrnehmen (Prior anpassen)</button>
+    <button class="btn-act" id="btn-act">Handeln (Welt anpassen)</button>
+    <button class="btn-reset" id="btn-reset">Zurücksetzen</button>
+  </div>
+  <div class="action-log" id="action-log">Drücke einen der Buttons, um zu sehen, wie Free Energy minimiert wird.</div>
+</div>
+
+<script>
+(function() {
+  const canvas = document.getElementById('fe-canvas');
+  const ctx = canvas.getContext('2d');
+
+  const W = 720, H = 240;
+  const PAD = 30;
+  const XMIN = -5, XMAX = 45;
+
+  let state = {
+    priorMean: 20,
+    priorSigma: 5,
+    obs: 28,
+    sensorSigma: 3,
+    initPriorMean: 20,
+    initObs: 28,
+  };
+
+  function xToCanvas(x) {
+    return PAD + (x - XMIN) / (XMAX - XMIN) * (W - 2*PAD);
+  }
+
+  function gaussian(x, mu, sigma) {
+    return Math.exp(-0.5 * ((x - mu) / sigma) ** 2) / (sigma * Math.sqrt(2 * Math.PI));
+  }
+
+  function bayesianUpdate(priorMean, priorSigma, obs, sensorSigma) {
+    const priorPrec = 1 / (priorSigma ** 2);
+    const sensorPrec = 1 / (sensorSigma ** 2);
+    const postPrec = priorPrec + sensorPrec;
+    const postMean = (priorMean * priorPrec + obs * sensorPrec) / postPrec;
+    const postSigma = Math.sqrt(1 / postPrec);
+    return { mean: postMean, sigma: postSigma };
+  }
+
+  function computeFreeEnergy(priorMean, priorSigma, obs, sensorSigma) {
+    const combined = priorSigma ** 2 + sensorSigma ** 2;
+    return ((priorMean - obs) ** 2) / (2 * combined) + 0.5 * Math.log(2 * Math.PI * combined);
+  }
+
+  function drawGaussian(mu, sigma, color, filled) {
+    const steps = 300;
+    const dx = (XMAX - XMIN) / steps;
+    // find peak for normalization (for visual only — normalize to height 1)
+    const peak = gaussian(mu, mu, sigma);
+
+    ctx.beginPath();
+    for (let i = 0; i <= steps; i++) {
+      const x = XMIN + i * dx;
+      const y = gaussian(x, mu, sigma) / peak;
+      const cx = xToCanvas(x);
+      const cy = PAD + (1 - y) * (H - 2 * PAD);
+      i === 0 ? ctx.moveTo(cx, cy) : ctx.lineTo(cx, cy);
+    }
+
+    if (filled) {
+      ctx.lineTo(xToCanvas(XMAX), H - PAD);
+      ctx.lineTo(xToCanvas(XMIN), H - PAD);
+      ctx.closePath();
+      ctx.fillStyle = color + '22';
+      ctx.fill();
+    }
+
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+  }
+
+  function drawVerticalLine(x, color, label) {
+    const cx = xToCanvas(x);
+    ctx.save();
+    ctx.setLineDash([5, 4]);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.8;
+    ctx.beginPath();
+    ctx.moveTo(cx, PAD - 5);
+    ctx.lineTo(cx, H - PAD + 5);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = color;
+    ctx.font = '11px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, cx, PAD - 8);
+    ctx.restore();
+  }
+
+  function drawXAxis() {
+    ctx.strokeStyle = '#ccc';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(PAD, H - PAD);
+    ctx.lineTo(W - PAD, H - PAD);
+    ctx.stroke();
+
+    ctx.fillStyle = '#aaa';
+    ctx.font = '10px sans-serif';
+    ctx.textAlign = 'center';
+    for (let t = 0; t <= 40; t += 5) {
+      const cx = xToCanvas(t);
+      ctx.fillText(t + '°', cx, H - PAD + 14);
+    }
+  }
+
+  function drawPredictionErrorArrow(priorMean, obs) {
+    if (Math.abs(priorMean - obs) < 0.3) return;
+    const y = H - PAD - 12;
+    const x1 = xToCanvas(Math.min(priorMean, obs));
+    const x2 = xToCanvas(Math.max(priorMean, obs));
+
+    ctx.save();
+    ctx.strokeStyle = '#e87040';
+    ctx.fillStyle = '#e87040';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(x1, y);
+    ctx.lineTo(x2, y);
+    ctx.stroke();
+    // arrowheads
+    [x1, x2].forEach((x, i) => {
+      ctx.beginPath();
+      const dir = i === 0 ? -1 : 1;
+      ctx.moveTo(x, y);
+      ctx.lineTo(x + dir * 6, y - 4);
+      ctx.lineTo(x + dir * 6, y + 4);
+      ctx.closePath();
+      ctx.fill();
+    });
+
+    const mid = (x1 + x2) / 2;
+    ctx.font = '10px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Vorhersagefehler', mid, y - 7);
+    ctx.restore();
+  }
+
+  function render() {
+    const { priorMean, priorSigma, obs, sensorSigma } = state;
+    const post = bayesianUpdate(priorMean, priorSigma, obs, sensorSigma);
+
+    ctx.clearRect(0, 0, W, H);
+    drawXAxis();
+
+    drawGaussian(priorMean, priorSigma, '#5b6af5', true);
+    drawGaussian(obs, sensorSigma, '#27ae60', true);
+    drawGaussian(post.mean, post.sigma, '#e84040', false);
+
+    drawVerticalLine(obs, '#27ae60aa', obs.toFixed(1) + '°');
+    drawPredictionErrorArrow(priorMean, obs);
+
+    // update labels
+    document.getElementById('lbl-prior-mean').textContent = priorMean.toFixed(1) + ' °C';
+    document.getElementById('lbl-prior-sigma').textContent = priorSigma.toFixed(1) + ' °C';
+    document.getElementById('lbl-obs').textContent = obs.toFixed(1) + ' °C';
+    document.getElementById('lbl-sensor-sigma').textContent = sensorSigma.toFixed(1) + ' °C';
+
+    document.getElementById('m-post-mean').textContent = post.mean.toFixed(1);
+    const predError = Math.abs(priorMean - obs);
+    document.getElementById('m-pred-error').textContent = predError.toFixed(1);
+
+    const fe = computeFreeEnergy(priorMean, priorSigma, obs, sensorSigma);
+    document.getElementById('m-fe').textContent = fe.toFixed(2);
+
+    // color coding for prediction error
+    const errCard = document.getElementById('m-pred-error').parentElement;
+    const feCard = document.getElementById('m-fe').parentElement;
+    const hue = Math.max(0, 120 - predError * 6); // green→red
+    document.getElementById('m-pred-error').style.color = `hsl(${hue},70%,38%)`;
+    document.getElementById('m-fe').style.color = `hsl(${hue},70%,38%)`;
+
+    // FE bar (normalize: FE=0 → 0%, FE=10 → 100%)
+    const feNorm = Math.min(1, Math.max(0, (fe - 0.5) / 9.5));
+    const bar = document.getElementById('fe-bar');
+    bar.style.width = (feNorm * 100).toFixed(1) + '%';
+    bar.style.background = `hsl(${Math.round((1-feNorm)*120)},70%,48%)`;
+  }
+
+  // wire up sliders
+  function wireSlider(id, key, labelId) {
+    const sl = document.getElementById(id);
+    sl.addEventListener('input', () => {
+      state[key] = parseFloat(sl.value);
+      document.getElementById('action-log').textContent = 'Regler verändert — beobachte, wie Posterior und Free Energy reagieren.';
+      render();
+    });
+  }
+
+  wireSlider('sl-prior-mean', 'priorMean', 'lbl-prior-mean');
+  wireSlider('sl-prior-sigma', 'priorSigma', 'lbl-prior-sigma');
+  wireSlider('sl-obs', 'obs', 'lbl-obs');
+  wireSlider('sl-sensor-sigma', 'sensorSigma', 'lbl-sensor-sigma');
+
+  // Perception: move prior toward observation (in steps)
+  document.getElementById('btn-perceive').addEventListener('click', () => {
+    const target = state.obs;
+    const start = state.priorMean;
+    const diff = target - start;
+    if (Math.abs(diff) < 0.2) {
+      document.getElementById('action-log').textContent = 'Prior stimmt bereits mit Beobachtung überein — Free Energy minimal!';
+      return;
+    }
+    let step = 0;
+    const steps = 30;
+    function animate() {
+      step++;
+      const t = step / steps;
+      state.priorMean = start + diff * t;
+      document.getElementById('sl-prior-mean').value = state.priorMean;
+      render();
+      if (step < steps) requestAnimationFrame(animate);
+      else document.getElementById('action-log').textContent =
+        'Wahrnehmung: Prior wurde an die Beobachtung angepasst. Der Vorhersagefehler und die Free Energy sinken.';
+    }
+    document.getElementById('action-log').textContent = 'Animiere Wahrnehmungsprozess…';
+    animate();
+  });
+
+  // Action: move observation toward prior (in steps)
+  document.getElementById('btn-act').addEventListener('click', () => {
+    const target = state.priorMean;
+    const start = state.obs;
+    const diff = target - start;
+    if (Math.abs(diff) < 0.2) {
+      document.getElementById('action-log').textContent = 'Beobachtung entspricht bereits dem Prior — kein Handlungsbedarf!';
+      return;
+    }
+    let step = 0;
+    const steps = 30;
+    function animate() {
+      step++;
+      const t = step / steps;
+      state.obs = start + diff * t;
+      document.getElementById('sl-obs').value = state.obs;
+      render();
+      if (step < steps) requestAnimationFrame(animate);
+      else document.getElementById('action-log').textContent =
+        'Aktion: Die Welt wurde verändert (z.B. Fenster öffnen), sodass die Beobachtung zum Prior passt. Free Energy sinkt ebenso.';
+    }
+    document.getElementById('action-log').textContent = 'Animiere Aktionsprozess…';
+    animate();
+  });
+
+  // Reset
+  document.getElementById('btn-reset').addEventListener('click', () => {
+    state.priorMean = 20; state.priorSigma = 5; state.obs = 28; state.sensorSigma = 3;
+    document.getElementById('sl-prior-mean').value = 20;
+    document.getElementById('sl-prior-sigma').value = 5;
+    document.getElementById('sl-obs').value = 28;
+    document.getElementById('sl-sensor-sigma').value = 3;
+    document.getElementById('action-log').textContent = 'Zurückgesetzt. Ausgangszustand: Prior 20°C, Beobachtung 28°C.';
+    render();
+  });
+
+  render();
+})();
+</script>
+</div>
