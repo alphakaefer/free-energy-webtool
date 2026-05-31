@@ -1,7 +1,8 @@
-<!-- Free Energy Interactive Learning Tool -->
-<!-- Einbetten in WordPress: Custom HTML Block, diesen gesamten Code einfügen -->
+<!-- Free Energy Interactive Learning Tool v2 -->
+<!-- WordPress: Custom HTML Block, diesen gesamten Code einfügen -->
 <div id="fe-tool">
 <style>
+  #fe-tool * { box-sizing: border-box; }
   #fe-tool {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     max-width: 780px;
@@ -10,531 +11,399 @@
     background: #f8f9ff;
     border-radius: 12px;
     padding: 24px;
-    box-sizing: border-box;
   }
-  #fe-tool h2 {
-    font-size: 1.4em;
-    margin: 0 0 4px 0;
-    color: #1a1a2e;
-  }
-  #fe-tool .subtitle {
-    font-size: 0.9em;
-    color: #666;
-    margin: 0 0 20px 0;
-  }
+  #fe-tool h2 { font-size: 1.35em; margin: 0 0 4px 0; }
+  #fe-tool .subtitle { font-size: 0.88em; color: #666; margin: 0 0 18px 0; line-height: 1.5; }
   #fe-tool .canvas-wrap {
     background: #fff;
     border: 1px solid #dde;
     border-radius: 8px;
-    padding: 12px;
-    margin-bottom: 20px;
-  }
-  #fe-tool canvas {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-  #fe-tool .legend {
-    display: flex;
-    gap: 18px;
-    margin-top: 8px;
-    flex-wrap: wrap;
-    font-size: 0.82em;
-  }
-  #fe-tool .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  #fe-tool .legend-dot {
-    width: 28px;
-    height: 3px;
-    border-radius: 2px;
-  }
-  #fe-tool .controls {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px 24px;
-    margin-bottom: 20px;
-  }
-  @media (max-width: 520px) {
-    #fe-tool .controls { grid-template-columns: 1fr; }
-  }
-  #fe-tool .control-group label {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.85em;
-    font-weight: 600;
-    margin-bottom: 4px;
-    color: #333;
-  }
-  #fe-tool .control-group label span {
-    font-weight: 400;
-    color: #555;
-  }
-  #fe-tool input[type=range] {
-    width: 100%;
-    accent-color: #5b6af5;
-    cursor: pointer;
-  }
-  #fe-tool .metrics {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin-bottom: 20px;
-  }
-  @media (max-width: 520px) {
-    #fe-tool .metrics { grid-template-columns: 1fr 1fr; }
-  }
-  #fe-tool .metric-card {
-    background: #fff;
-    border: 1px solid #dde;
-    border-radius: 8px;
-    padding: 12px 14px;
-    text-align: center;
-  }
-  #fe-tool .metric-card .metric-label {
-    font-size: 0.75em;
-    color: #888;
-    margin-bottom: 4px;
-  }
-  #fe-tool .metric-card .metric-value {
-    font-size: 1.5em;
-    font-weight: 700;
-  }
-  #fe-tool .metric-card .metric-unit {
-    font-size: 0.7em;
-    color: #999;
-  }
-  #fe-tool .section {
-    background: #fff;
-    border: 1px solid #dde;
-    border-radius: 8px;
-    padding: 16px 18px;
-    margin-bottom: 16px;
-  }
-  #fe-tool .section h3 {
-    font-size: 1em;
-    margin: 0 0 10px 0;
-    color: #333;
-  }
-  #fe-tool .section p {
-    font-size: 0.85em;
-    color: #555;
-    margin: 0 0 12px 0;
-    line-height: 1.6;
-  }
-  #fe-tool .btn-row {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  #fe-tool button {
-    padding: 9px 18px;
-    border: none;
-    border-radius: 6px;
-    font-size: 0.88em;
-    font-weight: 600;
-    cursor: pointer;
-    transition: transform 0.1s, opacity 0.1s;
-  }
-  #fe-tool button:active { transform: scale(0.97); }
-  #fe-tool .btn-perceive {
-    background: #5b6af5;
-    color: #fff;
-  }
-  #fe-tool .btn-act {
-    background: #e87040;
-    color: #fff;
-  }
-  #fe-tool .btn-reset {
-    background: #eee;
-    color: #555;
-  }
-  #fe-tool .action-log {
-    margin-top: 10px;
-    font-size: 0.82em;
-    color: #666;
-    min-height: 20px;
-    font-style: italic;
-  }
-  #fe-tool .fe-bar-wrap {
-    margin-top: 10px;
-  }
-  #fe-tool .fe-bar-label {
-    font-size: 0.8em;
-    color: #666;
-    margin-bottom: 4px;
-    display: flex;
-    justify-content: space-between;
-  }
-  #fe-tool .fe-bar-track {
-    background: #eef;
-    border-radius: 4px;
-    height: 14px;
+    padding: 12px 12px 8px;
+    margin-bottom: 18px;
     overflow: hidden;
   }
-  #fe-tool .fe-bar-fill {
-    height: 100%;
-    border-radius: 4px;
-    transition: width 0.4s ease, background 0.4s;
+  #fe-canvas { display: block; width: 100%; }
+  #fe-tool .legend {
+    display: flex; gap: 14px; margin-top: 8px;
+    flex-wrap: wrap; font-size: 0.78em; color: #555;
   }
-  #fe-tool .formula-box {
-    background: #f0f2ff;
-    border-left: 3px solid #5b6af5;
-    padding: 8px 12px;
-    border-radius: 0 6px 6px 0;
-    font-size: 0.82em;
-    color: #444;
-    margin-top: 8px;
-    font-family: "Courier New", monospace;
+  #fe-tool .legend span { display: flex; align-items: center; gap: 5px; }
+  #fe-tool .ld { display: inline-block; width: 24px; height: 3px; border-radius: 2px; }
+  #fe-tool .controls {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 10px 22px; margin-bottom: 18px;
+  }
+  @media(max-width:500px){ #fe-tool .controls{ grid-template-columns: 1fr; } }
+  #fe-tool .cg label {
+    display: flex; justify-content: space-between;
+    font-size: 0.83em; font-weight: 600; margin-bottom: 3px; color: #333;
+  }
+  #fe-tool .cg label em { font-style: normal; font-weight: 400; color: #666; }
+  #fe-tool input[type=range] { width: 100%; accent-color: #5b6af5; cursor: pointer; }
+  #fe-tool .metrics {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 10px; margin-bottom: 18px;
+  }
+  @media(max-width:480px){ #fe-tool .metrics{ grid-template-columns: 1fr 1fr; } }
+  #fe-tool .mc {
+    background: #fff; border: 1px solid #dde;
+    border-radius: 8px; padding: 10px 12px; text-align: center;
+  }
+  #fe-tool .mc .ml { font-size: 0.72em; color: #888; margin-bottom: 3px; }
+  #fe-tool .mc .mv { font-size: 1.45em; font-weight: 700; }
+  #fe-tool .mc .mu { font-size: 0.68em; color: #aaa; }
+  #fe-tool .sec {
+    background: #fff; border: 1px solid #dde;
+    border-radius: 8px; padding: 14px 16px; margin-bottom: 14px;
+  }
+  #fe-tool .sec h3 { font-size: 0.95em; margin: 0 0 8px 0; color: #222; }
+  #fe-tool .sec p { font-size: 0.83em; color: #555; margin: 0 0 10px 0; line-height: 1.6; }
+  #fe-tool .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  #fe-tool button {
+    padding: 8px 16px; border: none; border-radius: 6px;
+    font-size: 0.85em; font-weight: 600; cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  #fe-tool button:hover { box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+  #fe-tool button:active { transform: scale(0.97); }
+  #fe-tool .bp { background: #5b6af5; color: #fff; }
+  #fe-tool .ba { background: #e87040; color: #fff; }
+  #fe-tool .br { background: #eee; color: #555; }
+  #fe-tool .log {
+    margin-top: 9px; font-size: 0.81em; color: #555;
+    min-height: 18px; font-style: italic;
+  }
+  #fe-tool .febar-wrap { margin-top: 10px; }
+  #fe-tool .febar-labels {
+    display: flex; justify-content: space-between;
+    font-size: 0.75em; color: #888; margin-bottom: 3px;
+  }
+  #fe-tool .febar-track {
+    background: #eef; border-radius: 4px; height: 13px; overflow: hidden;
+  }
+  #fe-tool .febar-fill {
+    height: 100%; border-radius: 4px;
+    transition: width 0.35s ease, background-color 0.35s ease;
   }
 </style>
 
 <h2>Free Energy — Interaktives Lernwerkzeug</h2>
-<p class="subtitle">Szenario: Ein Agent schätzt die Temperatur. Spiel mit den Reglern, um zu sehen, wie Vorhersage, Beobachtung und Free Energy zusammenhängen.</p>
+<p class="subtitle">
+  <strong>Szenario: Ein Torwart muss einen Elfmeter halten.</strong><br>
+  Er hat eine Erwartung (Prior), wohin der Ball geschossen wird — basierend auf dem Anlauf des Schützen.
+  Der Sensor (seine Augen) liefert eine Beobachtung. Wie aktualisiert das Gehirn seine Schätzung, und wie minimiert es Free Energy?
+</p>
 
-<!-- Gaussian Plot -->
 <div class="canvas-wrap">
-  <canvas id="fe-canvas" width="720" height="240"></canvas>
+  <canvas id="fe-canvas"></canvas>
   <div class="legend">
-    <div class="legend-item"><div class="legend-dot" style="background:#5b6af5"></div> Prior (Erwartung)</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#27ae60"></div> Likelihood (Beobachtung)</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#e84040; opacity:0.8"></div> Posterior (aktualisierte Schätzung)</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#e87040; border-top:2px dashed #e87040; height:0"></div> Beobachtung</div>
+    <span><span class="ld" style="background:#5b6af5"></span> Prior (Erwartung des Torwarts)</span>
+    <span><span class="ld" style="background:#27ae60"></span> Likelihood (Sensor: Blickrichtung Ball)</span>
+    <span><span class="ld" style="background:#e84040"></span> Posterior (aktualisierte Schätzung)</span>
   </div>
 </div>
 
-<!-- Sliders -->
 <div class="controls">
-  <div class="control-group">
-    <label>Prior-Mittelwert (Erwartung) <span id="lbl-prior-mean">20 °C</span></label>
-    <input type="range" id="sl-prior-mean" min="0" max="40" step="0.5" value="20">
+  <div class="cg">
+    <label>Erwartete Ballposition <em id="lbl-pm">5.0 m</em></label>
+    <input type="range" id="sl-pm" min="0" max="10" step="0.1" value="5">
   </div>
-  <div class="control-group">
-    <label>Prior-Unsicherheit <span id="lbl-prior-sigma">5 °C</span></label>
-    <input type="range" id="sl-prior-sigma" min="0.5" max="12" step="0.5" value="5">
+  <div class="cg">
+    <label>Unsicherheit der Erwartung <em id="lbl-ps">1.5 m</em></label>
+    <input type="range" id="sl-ps" min="0.3" max="3.5" step="0.1" value="1.5">
   </div>
-  <div class="control-group">
-    <label>Beobachtung (Sensor) <span id="lbl-obs">28 °C</span></label>
-    <input type="range" id="sl-obs" min="0" max="40" step="0.5" value="28">
+  <div class="cg">
+    <label>Beobachtete Ballposition <em id="lbl-ob">7.5 m</em></label>
+    <input type="range" id="sl-ob" min="0" max="10" step="0.1" value="7.5">
   </div>
-  <div class="control-group">
-    <label>Sensor-Unsicherheit <span id="lbl-sensor-sigma">3 °C</span></label>
-    <input type="range" id="sl-sensor-sigma" min="0.5" max="12" step="0.5" value="3">
+  <div class="cg">
+    <label>Sensorunsicherheit (Sicht) <em id="lbl-ss">1.0 m</em></label>
+    <input type="range" id="sl-ss" min="0.3" max="3.5" step="0.1" value="1">
   </div>
 </div>
 
-<!-- Metrics -->
 <div class="metrics">
-  <div class="metric-card">
-    <div class="metric-label">Posterior-Schätzung</div>
-    <div class="metric-value" id="m-post-mean" style="color:#e84040">–</div>
-    <div class="metric-unit">°C</div>
+  <div class="mc">
+    <div class="ml">Posterior-Schätzung</div>
+    <div class="mv" id="m-post" style="color:#e84040">–</div>
+    <div class="mu">Meter</div>
   </div>
-  <div class="metric-card">
-    <div class="metric-label">Vorhersagefehler</div>
-    <div class="metric-value" id="m-pred-error" style="color:#e87040">–</div>
-    <div class="metric-unit">°C Abweichung</div>
+  <div class="mc">
+    <div class="ml">Vorhersagefehler</div>
+    <div class="mv" id="m-err">–</div>
+    <div class="mu">Meter Abweichung</div>
   </div>
-  <div class="metric-card">
-    <div class="metric-label">Free Energy (relativ)</div>
-    <div class="metric-value" id="m-fe" style="color:#5b6af5">–</div>
-    <div class="metric-unit">nats</div>
+  <div class="mc">
+    <div class="ml">Free Energy</div>
+    <div class="mv" id="m-fe" style="color:#5b6af5">–</div>
+    <div class="mu">relativ (nats)</div>
   </div>
 </div>
 
-<!-- Free Energy Erklärung -->
-<div class="section">
+<div class="sec">
   <h3>Was ist Free Energy?</h3>
   <p>
-    Free Energy ist ein Maß dafür, wie <strong>überrascht</strong> das Modell von der Beobachtung ist.
-    Sie ist groß, wenn Prior und Beobachtung weit auseinanderliegen, und klein, wenn sie übereinstimmen.
-    Das Gehirn versucht ständig, diese Größe zu minimieren.
+    Free Energy misst, wie stark das innere Modell des Torwarts von der Realität abweicht — also wie <strong>überrascht</strong> er ist.
+    Großer Vorhersagefehler = hohe Free Energy = großes Unbehagen. Das Gehirn will diese Größe immer minimieren.
   </p>
-  <div class="fe-bar-wrap">
-    <div class="fe-bar-label">
-      <span>Gering (kein Konflikt)</span>
-      <span>Hoch (großer Vorhersagefehler)</span>
-    </div>
-    <div class="fe-bar-track">
-      <div class="fe-bar-fill" id="fe-bar" style="width:50%; background:#5b6af5"></div>
-    </div>
-  </div>
-  <div class="formula-box" id="fe-formula">
-    F ≈ (μ_prior − Beobachtung)² / (σ_prior² + σ_sensor²)  +  log(σ_prior² + σ_sensor²)
+  <div class="febar-wrap">
+    <div class="febar-labels"><span>Niedrig (kein Konflikt)</span><span>Hoch (große Überraschung)</span></div>
+    <div class="febar-track"><div class="febar-fill" id="fe-bar" style="width:40%"></div></div>
   </div>
 </div>
 
-<!-- Wahrnehmung vs Aktion -->
-<div class="section">
-  <h3>Wahrnehmung vs. Aktion — zwei Wege zur Free-Energy-Minimierung</h3>
+<div class="sec">
+  <h3>Wahrnehmung vs. Aktion — zwei Wege zur Minimierung</h3>
   <p>
-    Das Gehirn kann Free Energy auf zwei Arten reduzieren:<br>
-    <strong>Wahrnehmen</strong>: Die eigene Überzeugung (Prior) wird angepasst — man akzeptiert, dass es wärmer ist als erwartet.<br>
-    <strong>Handeln</strong>: Man verändert die Welt, sodass die Beobachtung näher an die Erwartung rückt (z.B. Fenster öffnen).
+    <strong>Wahrnehmen:</strong> Der Torwart aktualisiert seine Überzeugung — er akzeptiert, dass der Ball doch rechts geht.<br>
+    <strong>Handeln:</strong> Er bewegt sich in die erwartete Richtung und versucht, die Welt seiner Erwartung anzupassen.<br>
+    Beide Strategien senken die Free Energy — aber auf unterschiedliche Weise.
   </p>
   <div class="btn-row">
-    <button class="btn-perceive" id="btn-perceive">Wahrnehmen (Prior anpassen)</button>
-    <button class="btn-act" id="btn-act">Handeln (Welt anpassen)</button>
-    <button class="btn-reset" id="btn-reset">Zurücksetzen</button>
+    <button class="bp" id="btn-p">Wahrnehmen (Überzeugung anpassen)</button>
+    <button class="ba" id="btn-a">Handeln (Position anpassen)</button>
+    <button class="br" id="btn-r">Zurücksetzen</button>
   </div>
-  <div class="action-log" id="action-log">Drücke einen der Buttons, um zu sehen, wie Free Energy minimiert wird.</div>
+  <div class="log" id="log">Stelle die Regler ein oder klicke einen Button.</div>
 </div>
 
 <script>
 (function() {
-  const canvas = document.getElementById('fe-canvas');
-  const ctx = canvas.getContext('2d');
+  var s = { pm: 5, ps: 1.5, ob: 7.5, ss: 1.0 };
+  var animId = null;
 
-  const W = 720, H = 240;
-  const PAD = 30;
-  const XMIN = -5, XMAX = 45;
+  var canvas = document.getElementById('fe-canvas');
+  var ctx = canvas.getContext('2d');
 
-  let state = {
-    priorMean: 20,
-    priorSigma: 5,
-    obs: 28,
-    sensorSigma: 3,
-    initPriorMean: 20,
-    initObs: 28,
-  };
-
-  function xToCanvas(x) {
-    return PAD + (x - XMIN) / (XMAX - XMIN) * (W - 2*PAD);
+  function setCanvasSize() {
+    var wrap = canvas.parentElement;
+    var w = wrap.clientWidth - 24;
+    if (w < 100) w = 400;
+    canvas.width = w;
+    canvas.height = Math.round(w * 0.32);
   }
 
-  function gaussian(x, mu, sigma) {
-    return Math.exp(-0.5 * ((x - mu) / sigma) ** 2) / (sigma * Math.sqrt(2 * Math.PI));
+  function gauss(x, mu, sig) {
+    return Math.exp(-0.5 * Math.pow((x - mu) / sig, 2));
   }
 
-  function bayesianUpdate(priorMean, priorSigma, obs, sensorSigma) {
-    const priorPrec = 1 / (priorSigma ** 2);
-    const sensorPrec = 1 / (sensorSigma ** 2);
-    const postPrec = priorPrec + sensorPrec;
-    const postMean = (priorMean * priorPrec + obs * sensorPrec) / postPrec;
-    const postSigma = Math.sqrt(1 / postPrec);
-    return { mean: postMean, sigma: postSigma };
+  function posterior() {
+    var pp = 1 / (s.ps * s.ps), sp = 1 / (s.ss * s.ss);
+    var tp = pp + sp;
+    return { mean: (s.pm * pp + s.ob * sp) / tp, sig: Math.sqrt(1 / tp) };
   }
 
-  function computeFreeEnergy(priorMean, priorSigma, obs, sensorSigma) {
-    const combined = priorSigma ** 2 + sensorSigma ** 2;
-    return ((priorMean - obs) ** 2) / (2 * combined) + 0.5 * Math.log(2 * Math.PI * combined);
+  function freeEnergy() {
+    var cv = s.ps * s.ps + s.ss * s.ss;
+    return Math.pow(s.pm - s.ob, 2) / (2 * cv) + 0.5 * Math.log(2 * Math.PI * cv);
   }
 
-  function drawGaussian(mu, sigma, color, filled) {
-    const steps = 300;
-    const dx = (XMAX - XMIN) / steps;
-    // find peak for normalization (for visual only — normalize to height 1)
-    const peak = gaussian(mu, mu, sigma);
+  function xc(x) {
+    var W = canvas.width, pad = 36;
+    return pad + (x / 10) * (W - 2 * pad);
+  }
 
+  function drawCurve(mu, sig, color, fill) {
+    var W = canvas.width, H = canvas.height, pad = 36;
+    var steps = 400;
     ctx.beginPath();
-    for (let i = 0; i <= steps; i++) {
-      const x = XMIN + i * dx;
-      const y = gaussian(x, mu, sigma) / peak;
-      const cx = xToCanvas(x);
-      const cy = PAD + (1 - y) * (H - 2 * PAD);
-      i === 0 ? ctx.moveTo(cx, cy) : ctx.lineTo(cx, cy);
+    for (var i = 0; i <= steps; i++) {
+      var x = i / steps * 10;
+      var y = gauss(x, mu, sig);
+      var cx = xc(x);
+      var cy = pad + (1 - y) * (H - pad * 1.6);
+      if (i === 0) ctx.moveTo(cx, cy); else ctx.lineTo(cx, cy);
     }
-
-    if (filled) {
-      ctx.lineTo(xToCanvas(XMAX), H - PAD);
-      ctx.lineTo(xToCanvas(XMIN), H - PAD);
+    if (fill) {
+      ctx.lineTo(xc(10), H - pad * 0.6);
+      ctx.lineTo(xc(0), H - pad * 0.6);
       ctx.closePath();
-      ctx.fillStyle = color + '22';
+      ctx.fillStyle = color + '28';
       ctx.fill();
     }
-
     ctx.strokeStyle = color;
-    ctx.lineWidth = 2.5;
+    ctx.lineWidth = 2.2;
     ctx.stroke();
   }
 
-  function drawVerticalLine(x, color, label) {
-    const cx = xToCanvas(x);
+  function drawField() {
+    var W = canvas.width, H = canvas.height, pad = 36;
+    var baseline = H - pad * 0.6;
+
+    // ground line
+    ctx.strokeStyle = '#dde';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(pad, baseline); ctx.lineTo(W - pad, baseline); ctx.stroke();
+
+    // goal posts (approx 2.5–7.5m = center ±2.5)
+    ctx.strokeStyle = '#bbb';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([]);
+    [2.5, 7.5].forEach(function(gx) {
+      var cx = xc(gx);
+      ctx.beginPath(); ctx.moveTo(cx, pad * 0.4); ctx.lineTo(cx, baseline); ctx.stroke();
+    });
+    // crossbar
+    ctx.beginPath(); ctx.moveTo(xc(2.5), pad * 0.4); ctx.lineTo(xc(7.5), pad * 0.4); ctx.stroke();
+
+    // x-axis labels
+    ctx.fillStyle = '#aaa';
+    ctx.font = Math.max(9, Math.round(W * 0.016)) + 'px sans-serif';
+    ctx.textAlign = 'center';
+    for (var t = 0; t <= 10; t += 2) {
+      ctx.fillText(t + 'm', xc(t), H - 4);
+    }
+
+    // label: links / rechts
+    ctx.fillStyle = '#ccc';
+    ctx.font = Math.max(8, Math.round(W * 0.013)) + 'px sans-serif';
+    ctx.fillText('links', xc(0.5), baseline - 4);
+    ctx.fillText('rechts', xc(9.5), baseline - 4);
+  }
+
+  function drawVLine(x, color, label) {
+    var H = canvas.height, pad = 36;
+    var cx = xc(x);
     ctx.save();
-    ctx.setLineDash([5, 4]);
+    ctx.setLineDash([4, 4]);
     ctx.strokeStyle = color;
-    ctx.lineWidth = 1.8;
-    ctx.beginPath();
-    ctx.moveTo(cx, PAD - 5);
-    ctx.lineTo(cx, H - PAD + 5);
-    ctx.stroke();
+    ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(cx, pad * 0.4); ctx.lineTo(cx, H - pad * 0.6); ctx.stroke();
     ctx.setLineDash([]);
     ctx.fillStyle = color;
-    ctx.font = '11px sans-serif';
+    ctx.font = Math.max(9, Math.round(canvas.width * 0.016)) + 'px sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText(label, cx, PAD - 8);
+    ctx.fillText(label, cx, pad * 0.25);
     ctx.restore();
   }
 
-  function drawXAxis() {
-    ctx.strokeStyle = '#ccc';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(PAD, H - PAD);
-    ctx.lineTo(W - PAD, H - PAD);
-    ctx.stroke();
-
-    ctx.fillStyle = '#aaa';
-    ctx.font = '10px sans-serif';
-    ctx.textAlign = 'center';
-    for (let t = 0; t <= 40; t += 5) {
-      const cx = xToCanvas(t);
-      ctx.fillText(t + '°', cx, H - PAD + 14);
-    }
-  }
-
-  function drawPredictionErrorArrow(priorMean, obs) {
-    if (Math.abs(priorMean - obs) < 0.3) return;
-    const y = H - PAD - 12;
-    const x1 = xToCanvas(Math.min(priorMean, obs));
-    const x2 = xToCanvas(Math.max(priorMean, obs));
-
+  function drawErrorBracket() {
+    if (Math.abs(s.pm - s.ob) < 0.15) return;
+    var H = canvas.height, pad = 36;
+    var y = H - pad * 0.6 - 10;
+    var x1 = xc(Math.min(s.pm, s.ob));
+    var x2 = xc(Math.max(s.pm, s.ob));
     ctx.save();
     ctx.strokeStyle = '#e87040';
     ctx.fillStyle = '#e87040';
     ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.moveTo(x1, y);
-    ctx.lineTo(x2, y);
-    ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x1, y); ctx.lineTo(x2, y); ctx.stroke();
     // arrowheads
-    [x1, x2].forEach((x, i) => {
+    [[x1, -1],[x2, 1]].forEach(function(a) {
       ctx.beginPath();
-      const dir = i === 0 ? -1 : 1;
-      ctx.moveTo(x, y);
-      ctx.lineTo(x + dir * 6, y - 4);
-      ctx.lineTo(x + dir * 6, y + 4);
-      ctx.closePath();
-      ctx.fill();
+      ctx.moveTo(a[0], y);
+      ctx.lineTo(a[0] + a[1] * 5, y - 3.5);
+      ctx.lineTo(a[0] + a[1] * 5, y + 3.5);
+      ctx.closePath(); ctx.fill();
     });
-
-    const mid = (x1 + x2) / 2;
-    ctx.font = '10px sans-serif';
+    ctx.font = Math.max(9, Math.round(canvas.width * 0.014)) + 'px sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('Vorhersagefehler', mid, y - 7);
+    ctx.fillText('Vorhersagefehler', (x1 + x2) / 2, y - 6);
     ctx.restore();
   }
 
   function render() {
-    const { priorMean, priorSigma, obs, sensorSigma } = state;
-    const post = bayesianUpdate(priorMean, priorSigma, obs, sensorSigma);
-
+    if (!canvas.width) return;
+    var W = canvas.width, H = canvas.height;
     ctx.clearRect(0, 0, W, H);
-    drawXAxis();
 
-    drawGaussian(priorMean, priorSigma, '#5b6af5', true);
-    drawGaussian(obs, sensorSigma, '#27ae60', true);
-    drawGaussian(post.mean, post.sigma, '#e84040', false);
-
-    drawVerticalLine(obs, '#27ae60aa', obs.toFixed(1) + '°');
-    drawPredictionErrorArrow(priorMean, obs);
+    drawField();
+    drawCurve(s.pm, s.ps, '#5b6af5', true);
+    drawCurve(s.ob, s.ss, '#27ae60', true);
+    var po = posterior();
+    drawCurve(po.mean, po.sig, '#e84040', false);
+    drawVLine(s.ob, '#27ae6099', s.ob.toFixed(1) + 'm');
+    drawErrorBracket();
 
     // update labels
-    document.getElementById('lbl-prior-mean').textContent = priorMean.toFixed(1) + ' °C';
-    document.getElementById('lbl-prior-sigma').textContent = priorSigma.toFixed(1) + ' °C';
-    document.getElementById('lbl-obs').textContent = obs.toFixed(1) + ' °C';
-    document.getElementById('lbl-sensor-sigma').textContent = sensorSigma.toFixed(1) + ' °C';
+    document.getElementById('lbl-pm').textContent = s.pm.toFixed(1) + ' m';
+    document.getElementById('lbl-ps').textContent = s.ps.toFixed(1) + ' m';
+    document.getElementById('lbl-ob').textContent = s.ob.toFixed(1) + ' m';
+    document.getElementById('lbl-ss').textContent = s.ss.toFixed(1) + ' m';
 
-    document.getElementById('m-post-mean').textContent = post.mean.toFixed(1);
-    const predError = Math.abs(priorMean - obs);
-    document.getElementById('m-pred-error').textContent = predError.toFixed(1);
-
-    const fe = computeFreeEnergy(priorMean, priorSigma, obs, sensorSigma);
+    document.getElementById('m-post').textContent = po.mean.toFixed(2);
+    var err = Math.abs(s.pm - s.ob);
+    var fe = freeEnergy();
+    document.getElementById('m-err').textContent = err.toFixed(2);
     document.getElementById('m-fe').textContent = fe.toFixed(2);
 
-    // color coding for prediction error
-    const errCard = document.getElementById('m-pred-error').parentElement;
-    const feCard = document.getElementById('m-fe').parentElement;
-    const hue = Math.max(0, 120 - predError * 6); // green→red
-    document.getElementById('m-pred-error').style.color = `hsl(${hue},70%,38%)`;
-    document.getElementById('m-fe').style.color = `hsl(${hue},70%,38%)`;
+    var hue = Math.max(0, 120 - err * 18);
+    document.getElementById('m-err').style.color = 'hsl(' + hue + ',65%,35%)';
+    document.getElementById('m-fe').style.color = 'hsl(' + hue + ',65%,35%)';
 
-    // FE bar (normalize: FE=0 → 0%, FE=10 → 100%)
-    const feNorm = Math.min(1, Math.max(0, (fe - 0.5) / 9.5));
-    const bar = document.getElementById('fe-bar');
-    bar.style.width = (feNorm * 100).toFixed(1) + '%';
-    bar.style.background = `hsl(${Math.round((1-feNorm)*120)},70%,48%)`;
+    var norm = Math.min(1, Math.max(0, (fe - 0.5) / 8));
+    var bar = document.getElementById('fe-bar');
+    bar.style.width = (norm * 100).toFixed(1) + '%';
+    bar.style.backgroundColor = 'hsl(' + Math.round((1 - norm) * 120) + ',65%,45%)';
   }
 
-  // wire up sliders
-  function wireSlider(id, key, labelId) {
-    const sl = document.getElementById(id);
-    sl.addEventListener('input', () => {
-      state[key] = parseFloat(sl.value);
-      document.getElementById('action-log').textContent = 'Regler verändert — beobachte, wie Posterior und Free Energy reagieren.';
+  function wire(id, key) {
+    document.getElementById(id).addEventListener('input', function() {
+      s[key] = parseFloat(this.value);
+      document.getElementById('log').textContent = 'Regler verändert — Prior, Posterior und Free Energy aktualisieren sich in Echtzeit.';
       render();
     });
   }
+  wire('sl-pm', 'pm'); wire('sl-ps', 'ps'); wire('sl-ob', 'ob'); wire('sl-ss', 'ss');
 
-  wireSlider('sl-prior-mean', 'priorMean', 'lbl-prior-mean');
-  wireSlider('sl-prior-sigma', 'priorSigma', 'lbl-prior-sigma');
-  wireSlider('sl-obs', 'obs', 'lbl-obs');
-  wireSlider('sl-sensor-sigma', 'sensorSigma', 'lbl-sensor-sigma');
-
-  // Perception: move prior toward observation (in steps)
-  document.getElementById('btn-perceive').addEventListener('click', () => {
-    const target = state.obs;
-    const start = state.priorMean;
-    const diff = target - start;
-    if (Math.abs(diff) < 0.2) {
-      document.getElementById('action-log').textContent = 'Prior stimmt bereits mit Beobachtung überein — Free Energy minimal!';
-      return;
-    }
-    let step = 0;
-    const steps = 30;
-    function animate() {
+  function animateTo(key, target, slId, onDone) {
+    if (animId) cancelAnimationFrame(animId);
+    var start = s[key], diff = target - start;
+    if (Math.abs(diff) < 0.05) { onDone('schon minimal!'); return; }
+    var step = 0, steps = 40;
+    function frame() {
       step++;
-      const t = step / steps;
-      state.priorMean = start + diff * t;
-      document.getElementById('sl-prior-mean').value = state.priorMean;
+      var t = 1 - Math.pow(1 - step / steps, 3); // ease-out
+      s[key] = start + diff * t;
+      document.getElementById(slId).value = s[key];
       render();
-      if (step < steps) requestAnimationFrame(animate);
-      else document.getElementById('action-log').textContent =
-        'Wahrnehmung: Prior wurde an die Beobachtung angepasst. Der Vorhersagefehler und die Free Energy sinken.';
+      if (step < steps) animId = requestAnimationFrame(frame);
+      else { animId = null; onDone(); }
     }
-    document.getElementById('action-log').textContent = 'Animiere Wahrnehmungsprozess…';
-    animate();
+    animId = requestAnimationFrame(frame);
+  }
+
+  document.getElementById('btn-p').addEventListener('click', function() {
+    document.getElementById('log').textContent = 'Wahrnehmung: Überzeugung (Prior) wird an die Beobachtung angepasst…';
+    animateTo('pm', s.ob, 'sl-pm', function(msg) {
+      document.getElementById('log').textContent = msg ||
+        'Fertig. Der Torwart hat seine Erwartung aktualisiert — Vorhersagefehler und Free Energy sinken.';
+    });
   });
 
-  // Action: move observation toward prior (in steps)
-  document.getElementById('btn-act').addEventListener('click', () => {
-    const target = state.priorMean;
-    const start = state.obs;
-    const diff = target - start;
-    if (Math.abs(diff) < 0.2) {
-      document.getElementById('action-log').textContent = 'Beobachtung entspricht bereits dem Prior — kein Handlungsbedarf!';
-      return;
-    }
-    let step = 0;
-    const steps = 30;
-    function animate() {
-      step++;
-      const t = step / steps;
-      state.obs = start + diff * t;
-      document.getElementById('sl-obs').value = state.obs;
-      render();
-      if (step < steps) requestAnimationFrame(animate);
-      else document.getElementById('action-log').textContent =
-        'Aktion: Die Welt wurde verändert (z.B. Fenster öffnen), sodass die Beobachtung zum Prior passt. Free Energy sinkt ebenso.';
-    }
-    document.getElementById('action-log').textContent = 'Animiere Aktionsprozess…';
-    animate();
+  document.getElementById('btn-a').addEventListener('click', function() {
+    document.getElementById('log').textContent = 'Aktion: Der Torwart bewegt sich — Beobachtung nähert sich dem Prior…';
+    animateTo('ob', s.pm, 'sl-ob', function(msg) {
+      document.getElementById('log').textContent = msg ||
+        'Fertig. Durch Bewegung stimmt die Welt wieder mit der Erwartung überein — Free Energy sinkt ebenso.';
+    });
   });
 
-  // Reset
-  document.getElementById('btn-reset').addEventListener('click', () => {
-    state.priorMean = 20; state.priorSigma = 5; state.obs = 28; state.sensorSigma = 3;
-    document.getElementById('sl-prior-mean').value = 20;
-    document.getElementById('sl-prior-sigma').value = 5;
-    document.getElementById('sl-obs').value = 28;
-    document.getElementById('sl-sensor-sigma').value = 3;
-    document.getElementById('action-log').textContent = 'Zurückgesetzt. Ausgangszustand: Prior 20°C, Beobachtung 28°C.';
+  document.getElementById('btn-r').addEventListener('click', function() {
+    if (animId) { cancelAnimationFrame(animId); animId = null; }
+    s = { pm: 5, ps: 1.5, ob: 7.5, ss: 1.0 };
+    ['sl-pm','sl-ps','sl-ob','sl-ss'].forEach(function(id, i) {
+      document.getElementById(id).value = [5, 1.5, 7.5, 1.0][i];
+    });
+    document.getElementById('log').textContent = 'Zurückgesetzt. Ausgangslage: Erwartung 5m (Mitte), Ball kommt rechts bei 7.5m.';
     render();
   });
 
-  render();
+  function init() {
+    setCanvasSize();
+    render();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+  window.addEventListener('resize', function() {
+    setCanvasSize();
+    render();
+  });
 })();
 </script>
 </div>
