@@ -1,9 +1,9 @@
-<!-- Free Energy Interactive Learning Tool v2 -->
+<!-- Free Energy Interactive Learning Tool v3 -->
 <!-- WordPress: Custom HTML Block, diesen gesamten Code einfügen -->
-<div id="fe-tool">
+<div id="fetool-wrap">
 <style>
-  #fe-tool * { box-sizing: border-box; }
-  #fe-tool {
+  #fetool-wrap * { box-sizing: border-box; }
+  #fetool-wrap {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     max-width: 780px;
     margin: 0 auto;
@@ -12,398 +12,372 @@
     border-radius: 12px;
     padding: 24px;
   }
-  #fe-tool h2 { font-size: 1.35em; margin: 0 0 4px 0; }
-  #fe-tool .subtitle { font-size: 0.88em; color: #666; margin: 0 0 18px 0; line-height: 1.5; }
-  #fe-tool .canvas-wrap {
-    background: #fff;
-    border: 1px solid #dde;
-    border-radius: 8px;
-    padding: 12px 12px 8px;
-    margin-bottom: 18px;
-    overflow: hidden;
+  #fetool-wrap h2 { font-size: 1.35em; margin: 0 0 4px 0; }
+  #fetool-wrap .ft-sub { font-size: 0.88em; color: #666; margin: 0 0 18px 0; line-height: 1.5; }
+  #fetool-wrap .ft-canvas-wrap {
+    background: #fff; border: 1px solid #dde;
+    border-radius: 8px; padding: 12px 12px 8px; margin-bottom: 18px;
   }
-  #fe-canvas { display: block; width: 100%; }
-  #fe-tool .legend {
+  #fetool-wrap .ft-canvas-wrap canvas { display: block; width: 100%; }
+  #fetool-wrap .ft-legend {
     display: flex; gap: 14px; margin-top: 8px;
     flex-wrap: wrap; font-size: 0.78em; color: #555;
   }
-  #fe-tool .legend span { display: flex; align-items: center; gap: 5px; }
-  #fe-tool .ld { display: inline-block; width: 24px; height: 3px; border-radius: 2px; }
-  #fe-tool .controls {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 10px 22px; margin-bottom: 18px;
+  #fetool-wrap .ft-legend span { display: flex; align-items: center; gap: 5px; }
+  #fetool-wrap .ft-ld { display: inline-block; width: 24px; height: 3px; border-radius: 2px; }
+  #fetool-wrap .ft-controls {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px 22px; margin-bottom: 18px;
   }
-  @media(max-width:500px){ #fe-tool .controls{ grid-template-columns: 1fr; } }
-  #fe-tool .cg label {
+  @media(max-width:500px){ #fetool-wrap .ft-controls{ grid-template-columns: 1fr; } }
+  #fetool-wrap .ft-cg label {
     display: flex; justify-content: space-between;
     font-size: 0.83em; font-weight: 600; margin-bottom: 3px; color: #333;
   }
-  #fe-tool .cg label em { font-style: normal; font-weight: 400; color: #666; }
-  #fe-tool input[type=range] { width: 100%; accent-color: #5b6af5; cursor: pointer; }
-  #fe-tool .metrics {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 10px; margin-bottom: 18px;
+  #fetool-wrap .ft-cg label em { font-style: normal; font-weight: 400; color: #666; }
+  #fetool-wrap input[type=range] { width: 100%; accent-color: #5b6af5; cursor: pointer; }
+  #fetool-wrap .ft-metrics {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 18px;
   }
-  @media(max-width:480px){ #fe-tool .metrics{ grid-template-columns: 1fr 1fr; } }
-  #fe-tool .mc {
-    background: #fff; border: 1px solid #dde;
-    border-radius: 8px; padding: 10px 12px; text-align: center;
+  @media(max-width:480px){ #fetool-wrap .ft-metrics{ grid-template-columns: 1fr 1fr; } }
+  #fetool-wrap .ft-mc {
+    background: #fff; border: 1px solid #dde; border-radius: 8px; padding: 10px 12px; text-align: center;
   }
-  #fe-tool .mc .ml { font-size: 0.72em; color: #888; margin-bottom: 3px; }
-  #fe-tool .mc .mv { font-size: 1.45em; font-weight: 700; }
-  #fe-tool .mc .mu { font-size: 0.68em; color: #aaa; }
-  #fe-tool .sec {
-    background: #fff; border: 1px solid #dde;
-    border-radius: 8px; padding: 14px 16px; margin-bottom: 14px;
+  #fetool-wrap .ft-mc .ft-ml { font-size: 0.72em; color: #888; margin-bottom: 3px; }
+  #fetool-wrap .ft-mc .ft-mv { font-size: 1.45em; font-weight: 700; }
+  #fetool-wrap .ft-mc .ft-mu { font-size: 0.68em; color: #aaa; }
+  #fetool-wrap .ft-sec {
+    background: #fff; border: 1px solid #dde; border-radius: 8px; padding: 14px 16px; margin-bottom: 14px;
   }
-  #fe-tool .sec h3 { font-size: 0.95em; margin: 0 0 8px 0; color: #222; }
-  #fe-tool .sec p { font-size: 0.83em; color: #555; margin: 0 0 10px 0; line-height: 1.6; }
-  #fe-tool .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
-  #fe-tool button {
+  #fetool-wrap .ft-sec h3 { font-size: 0.95em; margin: 0 0 8px 0; color: #222; }
+  #fetool-wrap .ft-sec p { font-size: 0.83em; color: #555; margin: 0 0 10px 0; line-height: 1.6; }
+  #fetool-wrap .ft-btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  #fetool-wrap button {
     padding: 8px 16px; border: none; border-radius: 6px;
     font-size: 0.85em; font-weight: 600; cursor: pointer;
     transition: transform 0.1s, box-shadow 0.1s;
   }
-  #fe-tool button:hover { box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
-  #fe-tool button:active { transform: scale(0.97); }
-  #fe-tool .bp { background: #5b6af5; color: #fff; }
-  #fe-tool .ba { background: #e87040; color: #fff; }
-  #fe-tool .br { background: #eee; color: #555; }
-  #fe-tool .log {
-    margin-top: 9px; font-size: 0.81em; color: #555;
-    min-height: 18px; font-style: italic;
+  #fetool-wrap button:hover { box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+  #fetool-wrap button:active { transform: scale(0.97); }
+  #fetool-wrap .ft-bp { background: #5b6af5; color: #fff; }
+  #fetool-wrap .ft-ba { background: #e87040; color: #fff; }
+  #fetool-wrap .ft-br { background: #eee; color: #555; }
+  #fetool-wrap .ft-log {
+    margin-top: 9px; font-size: 0.81em; color: #555; min-height: 18px; font-style: italic;
   }
-  #fe-tool .febar-wrap { margin-top: 10px; }
-  #fe-tool .febar-labels {
-    display: flex; justify-content: space-between;
-    font-size: 0.75em; color: #888; margin-bottom: 3px;
+  #fetool-wrap .ft-febar-wrap { margin-top: 10px; }
+  #fetool-wrap .ft-febar-labels {
+    display: flex; justify-content: space-between; font-size: 0.75em; color: #888; margin-bottom: 3px;
   }
-  #fe-tool .febar-track {
-    background: #eef; border-radius: 4px; height: 13px; overflow: hidden;
-  }
-  #fe-tool .febar-fill {
+  #fetool-wrap .ft-febar-track { background: #eef; border-radius: 4px; height: 13px; overflow: hidden; }
+  #fetool-wrap .ft-febar-fill {
     height: 100%; border-radius: 4px;
     transition: width 0.35s ease, background-color 0.35s ease;
   }
 </style>
 
 <h2>Free Energy — Interaktives Lernwerkzeug</h2>
-<p class="subtitle">
+<p class="ft-sub">
   <strong>Szenario: Ein Torwart muss einen Elfmeter halten.</strong><br>
   Er hat eine Erwartung (Prior), wohin der Ball geschossen wird — basierend auf dem Anlauf des Schützen.
   Der Sensor (seine Augen) liefert eine Beobachtung. Wie aktualisiert das Gehirn seine Schätzung, und wie minimiert es Free Energy?
 </p>
 
-<div class="canvas-wrap">
-  <canvas id="fe-canvas"></canvas>
-  <div class="legend">
-    <span><span class="ld" style="background:#5b6af5"></span> Prior (Erwartung des Torwarts)</span>
-    <span><span class="ld" style="background:#27ae60"></span> Likelihood (Sensor: Blickrichtung Ball)</span>
-    <span><span class="ld" style="background:#e84040"></span> Posterior (aktualisierte Schätzung)</span>
+<div class="ft-canvas-wrap">
+  <canvas id="fetool-canvas"></canvas>
+  <div class="ft-legend">
+    <span><span class="ft-ld" style="background:#5b6af5"></span> Prior (Erwartung des Torwarts)</span>
+    <span><span class="ft-ld" style="background:#27ae60"></span> Likelihood (Sensor: Blickrichtung Ball)</span>
+    <span><span class="ft-ld" style="background:#e84040"></span> Posterior (aktualisierte Schätzung)</span>
   </div>
 </div>
 
-<div class="controls">
-  <div class="cg">
-    <label>Erwartete Ballposition <em id="lbl-pm">5.0 m</em></label>
-    <input type="range" id="sl-pm" min="0" max="10" step="0.1" value="5">
+<div class="ft-controls">
+  <div class="ft-cg">
+    <label>Erwartete Ballposition <em id="fetool-lbl-pm">5.0 m</em></label>
+    <input type="range" id="fetool-sl-pm" min="0" max="10" step="0.1" value="5">
   </div>
-  <div class="cg">
-    <label>Unsicherheit der Erwartung <em id="lbl-ps">1.5 m</em></label>
-    <input type="range" id="sl-ps" min="0.3" max="3.5" step="0.1" value="1.5">
+  <div class="ft-cg">
+    <label>Unsicherheit der Erwartung <em id="fetool-lbl-ps">1.5 m</em></label>
+    <input type="range" id="fetool-sl-ps" min="0.3" max="3.5" step="0.1" value="1.5">
   </div>
-  <div class="cg">
-    <label>Beobachtete Ballposition <em id="lbl-ob">7.5 m</em></label>
-    <input type="range" id="sl-ob" min="0" max="10" step="0.1" value="7.5">
+  <div class="ft-cg">
+    <label>Beobachtete Ballposition <em id="fetool-lbl-ob">7.5 m</em></label>
+    <input type="range" id="fetool-sl-ob" min="0" max="10" step="0.1" value="7.5">
   </div>
-  <div class="cg">
-    <label>Sensorunsicherheit (Sicht) <em id="lbl-ss">1.0 m</em></label>
-    <input type="range" id="sl-ss" min="0.3" max="3.5" step="0.1" value="1">
-  </div>
-</div>
-
-<div class="metrics">
-  <div class="mc">
-    <div class="ml">Posterior-Schätzung</div>
-    <div class="mv" id="m-post" style="color:#e84040">–</div>
-    <div class="mu">Meter</div>
-  </div>
-  <div class="mc">
-    <div class="ml">Vorhersagefehler</div>
-    <div class="mv" id="m-err">–</div>
-    <div class="mu">Meter Abweichung</div>
-  </div>
-  <div class="mc">
-    <div class="ml">Free Energy</div>
-    <div class="mv" id="m-fe" style="color:#5b6af5">–</div>
-    <div class="mu">relativ (nats)</div>
+  <div class="ft-cg">
+    <label>Sensorunsicherheit (Sicht) <em id="fetool-lbl-ss">1.0 m</em></label>
+    <input type="range" id="fetool-sl-ss" min="0.3" max="3.5" step="0.1" value="1">
   </div>
 </div>
 
-<div class="sec">
+<div class="ft-metrics">
+  <div class="ft-mc">
+    <div class="ft-ml">Posterior-Schätzung</div>
+    <div class="ft-mv" id="fetool-m-post" style="color:#e84040">–</div>
+    <div class="ft-mu">Meter</div>
+  </div>
+  <div class="ft-mc">
+    <div class="ft-ml">Vorhersagefehler</div>
+    <div class="ft-mv" id="fetool-m-err">–</div>
+    <div class="ft-mu">Meter Abweichung</div>
+  </div>
+  <div class="ft-mc">
+    <div class="ft-ml">Free Energy</div>
+    <div class="ft-mv" id="fetool-m-fe" style="color:#5b6af5">–</div>
+    <div class="ft-mu">relativ (nats)</div>
+  </div>
+</div>
+
+<div class="ft-sec">
   <h3>Was ist Free Energy?</h3>
   <p>
     Free Energy misst, wie stark das innere Modell des Torwarts von der Realität abweicht — also wie <strong>überrascht</strong> er ist.
-    Großer Vorhersagefehler = hohe Free Energy = großes Unbehagen. Das Gehirn will diese Größe immer minimieren.
+    Großer Vorhersagefehler = hohe Free Energy. Das Gehirn will diese Größe ständig minimieren.
   </p>
-  <div class="febar-wrap">
-    <div class="febar-labels"><span>Niedrig (kein Konflikt)</span><span>Hoch (große Überraschung)</span></div>
-    <div class="febar-track"><div class="febar-fill" id="fe-bar" style="width:40%"></div></div>
+  <div class="ft-febar-wrap">
+    <div class="ft-febar-labels"><span>Niedrig (kein Konflikt)</span><span>Hoch (große Überraschung)</span></div>
+    <div class="ft-febar-track"><div class="ft-febar-fill" id="fetool-fe-bar" style="width:40%;background:#5b6af5"></div></div>
   </div>
 </div>
 
-<div class="sec">
+<div class="ft-sec">
   <h3>Wahrnehmung vs. Aktion — zwei Wege zur Minimierung</h3>
   <p>
     <strong>Wahrnehmen:</strong> Der Torwart aktualisiert seine Überzeugung — er akzeptiert, dass der Ball doch rechts geht.<br>
     <strong>Handeln:</strong> Er bewegt sich in die erwartete Richtung und versucht, die Welt seiner Erwartung anzupassen.<br>
     Beide Strategien senken die Free Energy — aber auf unterschiedliche Weise.
   </p>
-  <div class="btn-row">
-    <button class="bp" id="btn-p">Wahrnehmen (Überzeugung anpassen)</button>
-    <button class="ba" id="btn-a">Handeln (Position anpassen)</button>
-    <button class="br" id="btn-r">Zurücksetzen</button>
+  <div class="ft-btn-row">
+    <button class="ft-bp" id="fetool-btn-p">Wahrnehmen (Überzeugung anpassen)</button>
+    <button class="ft-ba" id="fetool-btn-a">Handeln (Position anpassen)</button>
+    <button class="ft-br" id="fetool-btn-r">Zurücksetzen</button>
   </div>
-  <div class="log" id="log">Stelle die Regler ein oder klicke einen Button.</div>
+  <div class="ft-log" id="fetool-log">Stelle die Regler ein oder klicke einen Button.</div>
 </div>
 
 <script>
 (function() {
-  var s = { pm: 5, ps: 1.5, ob: 7.5, ss: 1.0 };
-  var animId = null;
+  // Use a short delay so WordPress fully renders the DOM and layout before we measure sizes
+  setTimeout(function() {
 
-  var canvas = document.getElementById('fe-canvas');
-  var ctx = canvas.getContext('2d');
+    var root    = document.getElementById('fetool-wrap');
+    var canvas  = document.getElementById('fetool-canvas');
+    if (!root || !canvas) return;
+    var ctx = canvas.getContext('2d');
 
-  function setCanvasSize() {
-    var wrap = canvas.parentElement;
-    var w = wrap.clientWidth - 24;
-    if (w < 100) w = 400;
-    canvas.width = w;
-    canvas.height = Math.round(w * 0.32);
-  }
+    // Helper: find element within our container (avoids clashes with other page elements)
+    function q(id) { return root.querySelector('#' + id); }
 
-  function gauss(x, mu, sig) {
-    return Math.exp(-0.5 * Math.pow((x - mu) / sig, 2));
-  }
+    var s = { pm: 5, ps: 1.5, ob: 7.5, ss: 1.0 };
+    var animId = null;
 
-  function posterior() {
-    var pp = 1 / (s.ps * s.ps), sp = 1 / (s.ss * s.ss);
-    var tp = pp + sp;
-    return { mean: (s.pm * pp + s.ob * sp) / tp, sig: Math.sqrt(1 / tp) };
-  }
-
-  function freeEnergy() {
-    var cv = s.ps * s.ps + s.ss * s.ss;
-    return Math.pow(s.pm - s.ob, 2) / (2 * cv) + 0.5 * Math.log(2 * Math.PI * cv);
-  }
-
-  function xc(x) {
-    var W = canvas.width, pad = 36;
-    return pad + (x / 10) * (W - 2 * pad);
-  }
-
-  function drawCurve(mu, sig, color, fill) {
-    var W = canvas.width, H = canvas.height, pad = 36;
-    var steps = 400;
-    ctx.beginPath();
-    for (var i = 0; i <= steps; i++) {
-      var x = i / steps * 10;
-      var y = gauss(x, mu, sig);
-      var cx = xc(x);
-      var cy = pad + (1 - y) * (H - pad * 1.6);
-      if (i === 0) ctx.moveTo(cx, cy); else ctx.lineTo(cx, cy);
-    }
-    if (fill) {
-      ctx.lineTo(xc(10), H - pad * 0.6);
-      ctx.lineTo(xc(0), H - pad * 0.6);
-      ctx.closePath();
-      ctx.fillStyle = color + '28';
-      ctx.fill();
-    }
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 2.2;
-    ctx.stroke();
-  }
-
-  function drawField() {
-    var W = canvas.width, H = canvas.height, pad = 36;
-    var baseline = H - pad * 0.6;
-
-    // ground line
-    ctx.strokeStyle = '#dde';
-    ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(pad, baseline); ctx.lineTo(W - pad, baseline); ctx.stroke();
-
-    // goal posts (approx 2.5–7.5m = center ±2.5)
-    ctx.strokeStyle = '#bbb';
-    ctx.lineWidth = 1.5;
-    ctx.setLineDash([]);
-    [2.5, 7.5].forEach(function(gx) {
-      var cx = xc(gx);
-      ctx.beginPath(); ctx.moveTo(cx, pad * 0.4); ctx.lineTo(cx, baseline); ctx.stroke();
-    });
-    // crossbar
-    ctx.beginPath(); ctx.moveTo(xc(2.5), pad * 0.4); ctx.lineTo(xc(7.5), pad * 0.4); ctx.stroke();
-
-    // x-axis labels
-    ctx.fillStyle = '#aaa';
-    ctx.font = Math.max(9, Math.round(W * 0.016)) + 'px sans-serif';
-    ctx.textAlign = 'center';
-    for (var t = 0; t <= 10; t += 2) {
-      ctx.fillText(t + 'm', xc(t), H - 4);
+    function setSize() {
+      var w = canvas.parentElement.clientWidth - 24;
+      if (w < 200) w = 400;
+      canvas.width  = Math.round(w);
+      canvas.height = Math.round(w * 0.33);
     }
 
-    // label: links / rechts
-    ctx.fillStyle = '#ccc';
-    ctx.font = Math.max(8, Math.round(W * 0.013)) + 'px sans-serif';
-    ctx.fillText('links', xc(0.5), baseline - 4);
-    ctx.fillText('rechts', xc(9.5), baseline - 4);
-  }
+    function gauss(x, mu, sig) {
+      return Math.exp(-0.5 * Math.pow((x - mu) / sig, 2));
+    }
 
-  function drawVLine(x, color, label) {
-    var H = canvas.height, pad = 36;
-    var cx = xc(x);
-    ctx.save();
-    ctx.setLineDash([4, 4]);
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 1.5;
-    ctx.beginPath(); ctx.moveTo(cx, pad * 0.4); ctx.lineTo(cx, H - pad * 0.6); ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.fillStyle = color;
-    ctx.font = Math.max(9, Math.round(canvas.width * 0.016)) + 'px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(label, cx, pad * 0.25);
-    ctx.restore();
-  }
+    function posterior() {
+      var pp = 1 / (s.ps * s.ps), sp = 1 / (s.ss * s.ss), tp = pp + sp;
+      return { mean: (s.pm * pp + s.ob * sp) / tp, sig: Math.sqrt(1 / tp) };
+    }
 
-  function drawErrorBracket() {
-    if (Math.abs(s.pm - s.ob) < 0.15) return;
-    var H = canvas.height, pad = 36;
-    var y = H - pad * 0.6 - 10;
-    var x1 = xc(Math.min(s.pm, s.ob));
-    var x2 = xc(Math.max(s.pm, s.ob));
-    ctx.save();
-    ctx.strokeStyle = '#e87040';
-    ctx.fillStyle = '#e87040';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath(); ctx.moveTo(x1, y); ctx.lineTo(x2, y); ctx.stroke();
-    // arrowheads
-    [[x1, -1],[x2, 1]].forEach(function(a) {
+    function freeEnergy() {
+      var cv = s.ps * s.ps + s.ss * s.ss;
+      return Math.pow(s.pm - s.ob, 2) / (2 * cv) + 0.5 * Math.log(2 * Math.PI * cv);
+    }
+
+    function xc(x) {
+      var pad = 36;
+      return pad + (x / 10) * (canvas.width - 2 * pad);
+    }
+
+    function drawCurve(mu, sig, color, fill) {
+      var pad = 36, steps = 300;
+      var H = canvas.height;
       ctx.beginPath();
-      ctx.moveTo(a[0], y);
-      ctx.lineTo(a[0] + a[1] * 5, y - 3.5);
-      ctx.lineTo(a[0] + a[1] * 5, y + 3.5);
-      ctx.closePath(); ctx.fill();
-    });
-    ctx.font = Math.max(9, Math.round(canvas.width * 0.014)) + 'px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('Vorhersagefehler', (x1 + x2) / 2, y - 6);
-    ctx.restore();
-  }
-
-  function render() {
-    if (!canvas.width) return;
-    var W = canvas.width, H = canvas.height;
-    ctx.clearRect(0, 0, W, H);
-
-    drawField();
-    drawCurve(s.pm, s.ps, '#5b6af5', true);
-    drawCurve(s.ob, s.ss, '#27ae60', true);
-    var po = posterior();
-    drawCurve(po.mean, po.sig, '#e84040', false);
-    drawVLine(s.ob, '#27ae6099', s.ob.toFixed(1) + 'm');
-    drawErrorBracket();
-
-    // update labels
-    document.getElementById('lbl-pm').textContent = s.pm.toFixed(1) + ' m';
-    document.getElementById('lbl-ps').textContent = s.ps.toFixed(1) + ' m';
-    document.getElementById('lbl-ob').textContent = s.ob.toFixed(1) + ' m';
-    document.getElementById('lbl-ss').textContent = s.ss.toFixed(1) + ' m';
-
-    document.getElementById('m-post').textContent = po.mean.toFixed(2);
-    var err = Math.abs(s.pm - s.ob);
-    var fe = freeEnergy();
-    document.getElementById('m-err').textContent = err.toFixed(2);
-    document.getElementById('m-fe').textContent = fe.toFixed(2);
-
-    var hue = Math.max(0, 120 - err * 18);
-    document.getElementById('m-err').style.color = 'hsl(' + hue + ',65%,35%)';
-    document.getElementById('m-fe').style.color = 'hsl(' + hue + ',65%,35%)';
-
-    var norm = Math.min(1, Math.max(0, (fe - 0.5) / 8));
-    var bar = document.getElementById('fe-bar');
-    bar.style.width = (norm * 100).toFixed(1) + '%';
-    bar.style.backgroundColor = 'hsl(' + Math.round((1 - norm) * 120) + ',65%,45%)';
-  }
-
-  function wire(id, key) {
-    document.getElementById(id).addEventListener('input', function() {
-      s[key] = parseFloat(this.value);
-      document.getElementById('log').textContent = 'Regler verändert — Prior, Posterior und Free Energy aktualisieren sich in Echtzeit.';
-      render();
-    });
-  }
-  wire('sl-pm', 'pm'); wire('sl-ps', 'ps'); wire('sl-ob', 'ob'); wire('sl-ss', 'ss');
-
-  function animateTo(key, target, slId, onDone) {
-    if (animId) cancelAnimationFrame(animId);
-    var start = s[key], diff = target - start;
-    if (Math.abs(diff) < 0.05) { onDone('schon minimal!'); return; }
-    var step = 0, steps = 40;
-    function frame() {
-      step++;
-      var t = 1 - Math.pow(1 - step / steps, 3); // ease-out
-      s[key] = start + diff * t;
-      document.getElementById(slId).value = s[key];
-      render();
-      if (step < steps) animId = requestAnimationFrame(frame);
-      else { animId = null; onDone(); }
+      for (var i = 0; i <= steps; i++) {
+        var x  = i / steps * 10;
+        var y  = gauss(x, mu, sig);
+        var cx = xc(x);
+        var cy = pad + (1 - y) * (H - pad * 1.8);
+        if (i === 0) ctx.moveTo(cx, cy); else ctx.lineTo(cx, cy);
+      }
+      if (fill) {
+        ctx.lineTo(xc(10), H - pad * 0.8);
+        ctx.lineTo(xc(0),  H - pad * 0.8);
+        ctx.closePath();
+        ctx.fillStyle = color + '28';
+        ctx.fill();
+        ctx.beginPath();
+        for (var j = 0; j <= steps; j++) {
+          var xj = j / steps * 10;
+          var yj = gauss(xj, mu, sig);
+          var cxj = xc(xj);
+          var cyj = pad + (1 - yj) * (H - pad * 1.8);
+          if (j === 0) ctx.moveTo(cxj, cyj); else ctx.lineTo(cxj, cyj);
+        }
+      }
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2.2;
+      ctx.stroke();
     }
-    animId = requestAnimationFrame(frame);
-  }
 
-  document.getElementById('btn-p').addEventListener('click', function() {
-    document.getElementById('log').textContent = 'Wahrnehmung: Überzeugung (Prior) wird an die Beobachtung angepasst…';
-    animateTo('pm', s.ob, 'sl-pm', function(msg) {
-      document.getElementById('log').textContent = msg ||
-        'Fertig. Der Torwart hat seine Erwartung aktualisiert — Vorhersagefehler und Free Energy sinken.';
+    function drawField() {
+      var pad = 36, W = canvas.width, H = canvas.height;
+      var base = H - pad * 0.8;
+      ctx.strokeStyle = '#dde'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(pad, base); ctx.lineTo(W - pad, base); ctx.stroke();
+      // goal posts
+      ctx.strokeStyle = '#bbb'; ctx.lineWidth = 1.5; ctx.setLineDash([]);
+      [2.5, 7.5].forEach(function(gx) {
+        var cx = xc(gx);
+        ctx.beginPath(); ctx.moveTo(cx, pad * 0.5); ctx.lineTo(cx, base); ctx.stroke();
+      });
+      ctx.beginPath(); ctx.moveTo(xc(2.5), pad * 0.5); ctx.lineTo(xc(7.5), pad * 0.5); ctx.stroke();
+      var fs = Math.max(9, Math.round(W * 0.016));
+      ctx.fillStyle = '#aaa'; ctx.font = fs + 'px sans-serif'; ctx.textAlign = 'center';
+      for (var t = 0; t <= 10; t += 2) ctx.fillText(t + 'm', xc(t), H - 3);
+    }
+
+    function drawVLine(x, color) {
+      var pad = 36, H = canvas.height;
+      var cx = xc(x);
+      ctx.save();
+      ctx.setLineDash([4, 4]);
+      ctx.strokeStyle = color; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(cx, pad * 0.5); ctx.lineTo(cx, H - pad * 0.8); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = color;
+      ctx.font = Math.max(9, Math.round(canvas.width * 0.016)) + 'px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(x.toFixed(1) + 'm', cx, pad * 0.3);
+      ctx.restore();
+    }
+
+    function drawErrorBracket() {
+      if (Math.abs(s.pm - s.ob) < 0.15) return;
+      var pad = 36, H = canvas.height;
+      var y  = H - pad * 0.8 - 10;
+      var x1 = xc(Math.min(s.pm, s.ob));
+      var x2 = xc(Math.max(s.pm, s.ob));
+      ctx.save();
+      ctx.strokeStyle = '#e87040'; ctx.fillStyle = '#e87040'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(x1, y); ctx.lineTo(x2, y); ctx.stroke();
+      [[x1, -1],[x2, 1]].forEach(function(a) {
+        ctx.beginPath(); ctx.moveTo(a[0], y);
+        ctx.lineTo(a[0] + a[1] * 5, y - 3.5);
+        ctx.lineTo(a[0] + a[1] * 5, y + 3.5);
+        ctx.closePath(); ctx.fill();
+      });
+      ctx.font = Math.max(9, Math.round(canvas.width * 0.014)) + 'px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Vorhersagefehler', (x1 + x2) / 2, y - 6);
+      ctx.restore();
+    }
+
+    function render() {
+      if (!canvas.width || !canvas.height) { setSize(); }
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawField();
+      drawCurve(s.pm, s.ps, '#5b6af5', true);
+      drawCurve(s.ob, s.ss, '#27ae60', true);
+      var po = posterior();
+      drawCurve(po.mean, po.sig, '#e84040', false);
+      drawVLine(s.ob, '#27ae6099');
+      drawErrorBracket();
+
+      // update all text outputs
+      q('fetool-lbl-pm').textContent = s.pm.toFixed(1) + ' m';
+      q('fetool-lbl-ps').textContent = s.ps.toFixed(1) + ' m';
+      q('fetool-lbl-ob').textContent = s.ob.toFixed(1) + ' m';
+      q('fetool-lbl-ss').textContent = s.ss.toFixed(1) + ' m';
+
+      var po2 = posterior();
+      q('fetool-m-post').textContent = po2.mean.toFixed(2);
+      var err = Math.abs(s.pm - s.ob);
+      var fe  = freeEnergy();
+      q('fetool-m-err').textContent = err.toFixed(2);
+      q('fetool-m-fe').textContent  = fe.toFixed(2);
+
+      var hue = Math.max(0, 120 - err * 18);
+      q('fetool-m-err').style.color = 'hsl(' + hue + ',65%,35%)';
+      q('fetool-m-fe').style.color  = 'hsl(' + hue + ',65%,35%)';
+
+      var norm = Math.min(1, Math.max(0, (fe - 0.5) / 8));
+      var bar  = q('fetool-fe-bar');
+      bar.style.width = (norm * 100).toFixed(1) + '%';
+      bar.style.backgroundColor = 'hsl(' + Math.round((1 - norm) * 120) + ',65%,45%)';
+    }
+
+    // Wire sliders
+    [['fetool-sl-pm','pm','fetool-lbl-pm'],
+     ['fetool-sl-ps','ps','fetool-lbl-ps'],
+     ['fetool-sl-ob','ob','fetool-lbl-ob'],
+     ['fetool-sl-ss','ss','fetool-lbl-ss']].forEach(function(row) {
+      var el = q(row[0]);
+      if (!el) return;
+      el.addEventListener('input', function() {
+        s[row[1]] = parseFloat(this.value);
+        q('fetool-log').textContent = 'Regler verändert — beobachte, wie Posterior und Free Energy reagieren.';
+        render();
+      });
     });
-  });
 
-  document.getElementById('btn-a').addEventListener('click', function() {
-    document.getElementById('log').textContent = 'Aktion: Der Torwart bewegt sich — Beobachtung nähert sich dem Prior…';
-    animateTo('ob', s.pm, 'sl-ob', function(msg) {
-      document.getElementById('log').textContent = msg ||
-        'Fertig. Durch Bewegung stimmt die Welt wieder mit der Erwartung überein — Free Energy sinkt ebenso.';
+    function animateTo(key, target, slId, msg) {
+      if (animId) cancelAnimationFrame(animId);
+      var start = s[key], diff = target - start;
+      if (Math.abs(diff) < 0.05) {
+        q('fetool-log').textContent = 'Schon minimal — kein weiterer Konflikt!';
+        return;
+      }
+      var step = 0, steps = 40;
+      function frame() {
+        step++;
+        var t = 1 - Math.pow(1 - step / steps, 3);
+        s[key] = start + diff * t;
+        var sl = q(slId);
+        if (sl) sl.value = s[key];
+        render();
+        if (step < steps) { animId = requestAnimationFrame(frame); }
+        else { animId = null; q('fetool-log').textContent = msg; }
+      }
+      animId = requestAnimationFrame(frame);
+    }
+
+    q('fetool-btn-p').addEventListener('click', function() {
+      q('fetool-log').textContent = 'Wahrnehmung: Überzeugung (Prior) wird an die Beobachtung angepasst…';
+      animateTo('pm', s.ob, 'fetool-sl-pm',
+        'Fertig. Der Torwart hat seine Erwartung aktualisiert — Vorhersagefehler und Free Energy sinken.');
     });
-  });
 
-  document.getElementById('btn-r').addEventListener('click', function() {
-    if (animId) { cancelAnimationFrame(animId); animId = null; }
-    s = { pm: 5, ps: 1.5, ob: 7.5, ss: 1.0 };
-    ['sl-pm','sl-ps','sl-ob','sl-ss'].forEach(function(id, i) {
-      document.getElementById(id).value = [5, 1.5, 7.5, 1.0][i];
+    q('fetool-btn-a').addEventListener('click', function() {
+      q('fetool-log').textContent = 'Aktion: Der Torwart bewegt sich — Beobachtung nähert sich dem Prior…';
+      animateTo('ob', s.pm, 'fetool-sl-ob',
+        'Fertig. Durch Bewegung stimmt die Welt wieder mit der Erwartung überein — Free Energy sinkt ebenso.');
     });
-    document.getElementById('log').textContent = 'Zurückgesetzt. Ausgangslage: Erwartung 5m (Mitte), Ball kommt rechts bei 7.5m.';
-    render();
-  });
 
-  function init() {
-    setCanvasSize();
-    render();
-  }
+    q('fetool-btn-r').addEventListener('click', function() {
+      if (animId) { cancelAnimationFrame(animId); animId = null; }
+      s = { pm: 5, ps: 1.5, ob: 7.5, ss: 1.0 };
+      [['fetool-sl-pm',5],['fetool-sl-ps',1.5],['fetool-sl-ob',7.5],['fetool-sl-ss',1.0]].forEach(function(r) {
+        var el = q(r[0]); if (el) el.value = r[1];
+      });
+      q('fetool-log').textContent = 'Zurückgesetzt. Ausgangslage: Erwartung 5m (Mitte), Ball kommt rechts bei 7.5m.';
+      render();
+    });
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
+    window.addEventListener('resize', function() { setSize(); render(); });
 
-  window.addEventListener('resize', function() {
-    setCanvasSize();
+    setSize();
     render();
-  });
+
+  }, 150); // 150ms delay ensures WordPress layout is complete
 })();
 </script>
 </div>
