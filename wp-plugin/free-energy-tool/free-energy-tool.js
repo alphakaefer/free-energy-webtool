@@ -185,30 +185,85 @@
       updateFormulas(po, err, fe);
     }
 
+    function row(label, explain, formula, result, color) {
+      return '<tr>' +
+        '<td style="padding:5px 8px 5px 0;vertical-align:top;white-space:nowrap;color:#888;font-size:0.9em;">' + label + '</td>' +
+        '<td style="padding:5px 8px 5px 0;vertical-align:top;color:#aaa;font-size:0.82em;font-family:sans-serif;font-style:italic;">' + explain + '</td>' +
+        '<td style="padding:5px 8px;vertical-align:top;color:#555;">' + formula + '</td>' +
+        '<td style="padding:5px 0;vertical-align:top;font-weight:800;color:' + (color||'#2c3e8a') + ';">' + result + '</td>' +
+        '</tr>';
+    }
+
+    function section(title, color) {
+      return '<tr><td colspan="4" style="padding:12px 0 4px;font-weight:700;font-size:0.85em;color:' + color + ';border-top:1px solid #e8eaf6;letter-spacing:0.03em;">' + title + '</td></tr>';
+    }
+
     function updateFormulas(po, err, fe) {
-      var cv     = s.ps * s.ps + s.ss * s.ss;
-      var pp     = 1 / (s.ps * s.ps);
-      var sp     = 1 / (s.ss * s.ss);
-      var tp     = pp + sp;
-      var num    = s.pm * pp + s.ob * sp;
+      var cv      = s.ps * s.ps + s.ss * s.ss;
+      var pp      = 1 / (s.ps * s.ps);
+      var sp      = 1 / (s.ss * s.ss);
+      var tp      = pp + sp;
       var logTerm = 0.5 * Math.log(2 * Math.PI * cv);
       var errTerm = (s.pm - s.ob) * (s.pm - s.ob) / (2 * cv);
 
       var f = q('fetool-formula-box');
       if (!f) return;
-      f.innerHTML =
-        '<b>Bayesianisches Update (Posterior-Mittelwert):</b><br>' +
-        'Präzision Prior: π<sub>prior</sub> = 1 / ' + s.ps.toFixed(1) + '² = <b>' + pp.toFixed(3) + '</b><br>' +
-        'Präzision Sensor: π<sub>sensor</sub> = 1 / ' + s.ss.toFixed(1) + '² = <b>' + sp.toFixed(3) + '</b><br>' +
-        'Gesamt-Präzision: π<sub>gesamt</sub> = ' + pp.toFixed(3) + ' + ' + sp.toFixed(3) + ' = <b>' + tp.toFixed(3) + '</b><br>' +
-        'μ<sub>post</sub> = (' + s.pm.toFixed(1) + ' × ' + pp.toFixed(3) + ' + ' + s.ob.toFixed(1) + ' × ' + sp.toFixed(3) + ') / ' + tp.toFixed(3) + ' = <b>' + po.mean.toFixed(3) + '</b><br>' +
-        'σ<sub>post</sub> = √(1 / ' + tp.toFixed(3) + ') = <b>' + po.sig.toFixed(3) + '</b><br><br>' +
-        '<b>Vorhersagefehler (Prediction Error):</b><br>' +
-        'PE = |μ<sub>prior</sub> − Beobachtung| = |' + s.pm.toFixed(1) + ' − ' + s.ob.toFixed(1) + '| = <b>' + err.toFixed(3) + '</b><br><br>' +
-        '<b>Free Energy (vereinfacht, Gaußsche Annahme):</b><br>' +
-        'F = PE² / (2 · (σ²<sub>prior</sub> + σ²<sub>sensor</sub>)) + ½ · ln(2π · (σ²<sub>prior</sub> + σ²<sub>sensor</sub>))<br>' +
-        'F = ' + (s.pm - s.ob).toFixed(2) + '² / (2 · ' + cv.toFixed(2) + ') + ½ · ln(2π · ' + cv.toFixed(2) + ')<br>' +
-        'F = <b>' + errTerm.toFixed(3) + '</b> + <b>' + logTerm.toFixed(3) + '</b> = <b>' + fe.toFixed(3) + '</b>';
+
+      var html = '';
+
+      // Current values summary
+      html += '<div style="background:#eef2ff;border-radius:6px;padding:9px 12px;margin-bottom:12px;font-family:sans-serif;font-size:0.82em;color:#444;line-height:1.8;">';
+      html += '<b style="color:#333;">Aktuelle Reglerwerte:</b><br>';
+      html += '&nbsp;&nbsp;<span style="color:#5b6af5;font-weight:700;">μ<sub>prior</sub> = ' + s.pm.toFixed(1) + '</span> &nbsp;(Erwarteter Treffer)&nbsp;&nbsp;&nbsp;';
+      html += '<span style="color:#5b6af5;font-weight:700;">σ<sub>prior</sub> = ' + s.ps.toFixed(1) + '</span> &nbsp;(Unsicherheit im Modell)<br>';
+      html += '&nbsp;&nbsp;<span style="color:#27ae60;font-weight:700;">Beobachtung = ' + s.ob.toFixed(1) + '</span> &nbsp;(Beobachteter Treffer)&nbsp;&nbsp;&nbsp;';
+      html += '<span style="color:#27ae60;font-weight:700;">σ<sub>sensor</sub> = ' + s.ss.toFixed(1) + '</span> &nbsp;(Sensorunsicherheit)';
+      html += '</div>';
+
+      html += '<div style="font-family:sans-serif;font-size:0.8em;color:#555;margin-bottom:8px;line-height:1.6;">';
+      html += '<b>Symbole:</b> &nbsp; μ (mu) = Mittelwert einer Verteilung &nbsp;|&nbsp; σ (sigma) = Streuung / Unsicherheit &nbsp;|&nbsp; π (pi, hier) = Präzision = 1/σ²</div>';
+
+      html += '<table style="width:100%;border-collapse:collapse;">';
+
+      // Section 1: Precision
+      html += section('① Präzision berechnen — wie zuverlässig sind Prior und Sensor?', '#5b6af5');
+      html += '<tr><td colspan="4" style="font-size:0.78em;color:#888;padding:0 0 6px;font-family:sans-serif;font-style:italic;">Präzision π = 1/σ² — je kleiner die Unsicherheit σ, desto größer die Präzision. Wer präziser ist, bekommt mehr Gewicht beim Update.</td></tr>';
+      html += row('π<sub>prior</sub>', 'Präzision deines Modells', '1 / ' + s.ps.toFixed(1) + '² = 1 / ' + (s.ps*s.ps).toFixed(2), pp.toFixed(3), '#5b6af5');
+      html += row('π<sub>sensor</sub>', 'Präzision deiner Augen', '1 / ' + s.ss.toFixed(1) + '² = 1 / ' + (s.ss*s.ss).toFixed(2), sp.toFixed(3), '#27ae60');
+      html += row('π<sub>gesamt</sub>', 'Summe beider Präzisionen', pp.toFixed(3) + ' + ' + sp.toFixed(3), tp.toFixed(3), '#333');
+
+      // Section 2: Bayesian update
+      html += section('② Bayesianisches Update — wie entsteht der Posterior?', '#e84040');
+      html += '<tr><td colspan="4" style="font-size:0.78em;color:#888;padding:0 0 6px;font-family:sans-serif;font-style:italic;">Der Posterior-Mittelwert ist ein präzisionsgewichteter Durchschnitt: Wer präziser ist, zieht stärker. Ergebnis liegt immer zwischen Prior und Beobachtung.</td></tr>';
+      html += row('μ<sub>post</sub>', 'Aktualisierter Mittelwert',
+        '(' + s.pm.toFixed(1) + '×' + pp.toFixed(3) + ' + ' + s.ob.toFixed(1) + '×' + sp.toFixed(3) + ') / ' + tp.toFixed(3),
+        po.mean.toFixed(3), '#e84040');
+      html += row('σ<sub>post</sub>', 'Neue (kleinere) Unsicherheit',
+        '√(1 / ' + tp.toFixed(3) + ')',
+        po.sig.toFixed(3), '#e84040');
+
+      // Section 3: Prediction error
+      html += section('③ Vorhersagefehler (Prediction Error)', '#e87040');
+      html += '<tr><td colspan="4" style="font-size:0.78em;color:#888;padding:0 0 6px;font-family:sans-serif;font-style:italic;">Der Abstand zwischen Erwartung und Beobachtung. Großer Fehler → viel Lernpotenzial. Treibt sowohl Lernen als auch Handeln an.</td></tr>';
+      html += row('PE', '|Erwartung − Treffer|',
+        '|' + s.pm.toFixed(1) + ' − ' + s.ob.toFixed(1) + '|',
+        err.toFixed(3), '#e87040');
+
+      // Section 4: Free Energy
+      html += section('④ Free Energy — das Maß für Überraschung', '#2c3e8a');
+      html += '<tr><td colspan="4" style="font-size:0.78em;color:#888;padding:0 0 6px;font-family:sans-serif;font-style:italic;">F setzt sich aus zwei Teilen zusammen: Wie groß ist der Fehler? (Accuracy-Term) + Wie komplex/unsicher ist das Modell? (Complexity-Term)</td></tr>';
+      html += row('Accuracy', 'Fehler-Anteil an F',
+        'PE² / (2·(σ²<sub>prior</sub>+σ²<sub>sensor</sub>)) = ' + err.toFixed(2) + '² / (2·' + cv.toFixed(2) + ')',
+        errTerm.toFixed(3), '#2c3e8a');
+      html += row('Complexity', 'Modell-Komplexitäts-Anteil',
+        '½·ln(2π·' + cv.toFixed(2) + ')',
+        logTerm.toFixed(3), '#2c3e8a');
+      html += row('<b>F gesamt</b>', '<b>Accuracy + Complexity</b>',
+        errTerm.toFixed(3) + ' + ' + logTerm.toFixed(3),
+        '<span style="font-size:1.2em;">' + fe.toFixed(3) + '</span>', '#c0392b');
+
+      html += '</table>';
+      f.innerHTML = html;
     }
 
     // Sliders

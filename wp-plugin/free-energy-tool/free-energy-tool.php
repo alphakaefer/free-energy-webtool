@@ -173,11 +173,13 @@ function fet_shortcode( $atts ) {
       }
       #fetool-wrap .ft-formula-sec h3 { font-size: 0.95em; color: #222; margin-bottom: 10px; }
       #fetool-wrap #fetool-formula-box {
-        font-size: 0.8em; color: #444; line-height: 2;
-        background: #f4f6ff; border-radius: 7px; padding: 12px 14px;
+        font-size: 0.82em; color: #444; line-height: 1.7;
+        background: #f4f6ff; border-radius: 7px; padding: 14px 16px;
         font-family: "SFMono-Regular", Consolas, monospace;
+        overflow-x: auto;
       }
       #fetool-wrap #fetool-formula-box b { color: #2c3e8a; }
+      #fetool-wrap #fetool-formula-box table { min-width: 480px; }
     </style>
 
     <h2>Free Energy — Interaktives Lernwerkzeug</h2>
